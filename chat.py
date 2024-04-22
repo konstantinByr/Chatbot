@@ -12,7 +12,7 @@ with open('intents.json', 'r') as f:
 FILE = "data.pth"
 data = torch.load(FILE)
 
-wahrscheinlichkeit = 0.85
+wahrscheinlichkeit = 0.75
 inputSize = data["inputSize"]
 hiddenSize = data["hiddenSize"]
 outputSize = data["outputSize"]
