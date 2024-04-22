@@ -9,10 +9,10 @@ machine = torch.device('cpu')
 with open('intents.json', 'r') as f:
     intents = json.load(f)
 
-FILE = "data2.pth"
+FILE = "data.pth"
 data = torch.load(FILE)
 
-wahrscheinlichkeit = 0.8
+wahrscheinlichkeit = 0.85
 inputSize = data["inputSize"]
 hiddenSize = data["hiddenSize"]
 outputSize = data["outputSize"]
