@@ -47,7 +47,7 @@ XTrain = np.array(XTrain)
 YTrain = np.array(YTrain)
 
 # Hyperparameter
-num_epochs = 500
+num_epochs = 500 
 batch_size = 32
 learning_rate = 0.001
 inputSize = len(XTrain[0])

@@ -1,0 +1,184 @@
+{
+    "intents": [
+        {
+            "tag": "Begruessung",
+            "patterns": [
+                "Hallo", "Guten Tag", "Servus", "Hey"
+            ],
+            "responses": [
+                "Hallo, ich bin Markus, dein persoenlicher MB-Auswahlassistent!"
+            ]
+        },
+        {
+            "tag": "Verabschiedung",
+            "patterns": [
+                "Danke für die Hilfe", "Tschau", "Tschuess", "Auf Wiedersehen"
+            ],
+            "responses": [
+                "Auf Wiedersehen, bis zum naechsten Mal!", "Danke für deinen Besuch!"
+            ]
+        },
+        {
+            "tag": "Benzin",
+            "patterns": [
+                "Benzin", "Benziner", "Benzinmotor", "Ottomotor", "Otto Motor"
+            ],
+            "responses": [
+                "Ein Benziner also", "Super+" 
+            ]
+        },
+        {
+            "tag": "Hybrid",
+            "patterns": [
+                "Hybrid", "Elektro und Verbrenner", "PHEV", "Plug In Hybrid", "PlugInHybrid"
+            ],
+            "responses": [
+                "Hybride haben auch steuerliche Vorteile!", "Hybrid", "Das beste aus beiden Welten"
+            ]
+        },
+        {
+            "tag": "Elektrisch",
+            "patterns": [
+                "Elektrisch", "Elektro", "Stomer", "Klimafreundlich", "E-Motor", "E-Power", "E-Maschine", "Elektroauto"
+            ],
+            "responses": [
+                "Elektrisch", "E-Maschine", "EQ", "EQX"
+            ]
+        },
+        {
+            "tag": "Diesel",
+            "patterns": [
+                "Diesel", "Selbstzünder", "Dieselmotor", "Diesel-Motor"
+            ],
+            "responses": [
+                "Diesel", "d", "Sparsam also", "Da ist der Sound aber nicht so gut"
+            ]
+        },
+        {
+            "tag": "SUV",
+            "patterns": [
+                "SUV", "Gelände", "geländegänging", "Berge", "hoch sitzen", "bequem einsteigen", "Ja", "SportsUtilityVehicle"
+            ],
+            "responses": [
+                "SUV", "SportsUtilityVehicle", "GLX", "G Wagon"
+            ]
+        },
+        {
+            "tag": "kein SUV",
+            "patterns": [
+                "kein SUV", "befestigte Straßen", "Nein"
+            ],
+            "responses": [
+                "kein SUV", "kein GLX", "Flache Autos"
+            ]
+        },
+        {
+            "tag": "Kompakt",
+            "patterns": [
+                "A-Klasse", "Klein", "Stadt", "Stadttauglich", "Kompakt", "Kompaktwagen"
+            ],
+            "responses": [
+                "Etwas kleines, schreibe ich mir auf!", "A-Klasse oder CLA", "Ein A"
+            ]
+        },
+        {
+            "tag": "Mittel",
+            "patterns": [
+                "C-Klasse", "Mittelklasse", "Mittel", "GLC"
+            ],
+            "responses": [
+                "Also die C-Plattform", "GLC oder C-Klasse", "geringer Wendekreis, viel Platz"
+            ]
+        },
+        {
+            "tag": "obere Mittel",
+            "patterns": [
+                "E-Klasse", "obere Mittelklasse", "obere Mittel", "GLE"
+            ],
+            "responses": [
+                "obere Mittelklasse", "GLE oder E-Klasse", "E steht fuer ELEGANZ"
+            ]
+        },
+        {
+            "tag": "Oberklasse",
+            "patterns": [
+                "S-Klasse", "Oberklasse", "GLS", "teuer"
+            ],
+            "responses": [
+                "Oberklasse", "S-Klasse", "Der Chauffeur ist informiert", "Das wird teuer"
+            ]
+        },
+        {
+            "tag": "Luxusklasse",
+            "patterns": [
+                "Luxusklasse", "Maybach", "das Beste"
+            ],
+            "responses": [
+                "Maybach", "S-Klasse oder GLS?", "Der Chauffeur ist informiert", "Das wird sehr teuer"
+            ]
+        },
+        {
+            "tag": "Van",
+            "patterns": [
+                "Van", "Platz für die Familie", "sehr viel Platz", "viel Stauraum", "viele Sitzplätze"
+            ],
+            "responses": [
+                "Van", "Genug Platz für alles", "Da passt alles rein", "Willst du umziehen?"
+            ]
+        },
+        {
+            "tag": "T-Modell",
+            "patterns": [
+                "Kombi", "Avant", "Grosser Kofferaum", "praktisch", "T-Modell"
+            ],
+            "responses": [
+                "Kombi, ist notiert.", "Kombis sind die besseren Autos", "T-Modelle sind sehr praktisch"
+            ]
+        },
+        {
+            "tag": "Limousine",
+            "patterns": [
+                "Limousine", "Edel", "flach"
+            ],
+            "responses": [
+                "Limousine, alles klar!", "Ein Kombi waere die bessere Wahl gewesen", "Limousinen sind toll"
+            ]
+        },
+        {
+            "tag": "Coupe",
+            "patterns": [
+                "Coupee", "Coupe", "CLA Coupe", "Zweisitzer"
+            ],
+            "responses": [
+                "Ein Coupe also.", "Coupes sind schoen", "Ich wuerde jetzt schon den CLE empfehlen"
+            ]
+        },
+        {
+            "tag": "Cabrio",
+            "patterns": [
+                "Roadster", "Cabrio", "offenes Dach", "kein Dach"
+            ],
+            "responses": [
+                "Cabrio", "SL oder CLE", "Mit offenem Dach zu fahren hat was"
+            ]
+        },
+        {
+            "tag": "2Tuerer",
+            "patterns": [
+                "2 Tueren", "2 Tuerer", "zwei Tueren", "Zweituerer", "CLE", "zwei Türen", "Zweitürer"
+            ],
+            "responses": [
+                "2Tuerer", "Ohne Kinder war das Leben noch einfacher", "Das wird der CLE"
+            ]
+        },
+        {
+            "tag": "4Tuerer",
+            "patterns": [
+                "4 Türen", "4 Tuerer", "vier Tueren", "Viertuerer", "Vier", "4", "Vier Türen", "Viertürer"
+            ],
+            "responses": [
+                "4Tuerer", "Da hat jemand wohl viele Freunde", "4 Tueren sind eine gute Wahl", "Zwei", "2"
+            ]
+        }
+    ]
+}
