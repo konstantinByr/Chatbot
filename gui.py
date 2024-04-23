@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import scrolledtext
 from tkinter import messagebox
-import chat
+
 
 class ChatbotGUI:
     def __init__(self, master):
