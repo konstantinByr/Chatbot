@@ -4,401 +4,147 @@ import torch
 from model import NeuralNet
 from chatbot3 import bagOfWords, tokenize
 
-def main():
-
-    machine = torch.device('cpu')
-
-    with open('intents.json', 'r') as f:
-        intents = json.load(f)
-
-    FILE = "data.pth"
-    data = torch.load(FILE)
-
-    wahrscheinlichkeit = 0.8
-    inputSize = data["inputSize"]
-    hiddenSize = data["hiddenSize"]
-    outputSize = data["outputSize"]
-    allWords = data['allWords']
-    tags = data['tags']
-    model_state = data["model_state"]
-
-    model = NeuralNet(inputSize, hiddenSize, outputSize).to(machine)
-    model.load_state_dict(model_state)
-    model.eval()
-
-    booleanAntrieb = True
-    booleanSUV = True
-    booleanKlasse = True
-    booleanKarosserie = True
-    booleanTüren = True
-    autoScore = 0   #Punktzahl die zutreffendes Auto findet
-    #10T => Antrieb, 1T => SUV/keinSUV, 100 => Klasse, 10 => Karoserie, 1 => Türen
-    antriebScores = {'Benzin': 10000, 'Diesel': 20000, 'Hybrid': 30000, 'Elektrisch': 40000}
-    SUVScores= {'SUV': 1000, 'kein SUV': 0000}
-    klasseScores = {'Kompakt': 000, 'Mittel': 100, 'obere Mittel': 200, 'Oberklasse': 300, 'Luxusklasse': 400, 'Van': 500}
-    karosserieScores = {'T-Modell': 00, 'Limousine': 10, 'Coupe': 20, 'Cabrio': 30}
-    türenScores = {'2Tuerer': 0, '4Tuerer': 1}
-
-    botName = "Maggus"
-    print(f"{botName}: Hallo, ich bin {botName}, dein persoenlicher MB-Auswahlassistent!")
+import neptune
 
 
-    while booleanAntrieb:
-        print(f"{botName}: Welchen Antrieb willst du haben?")
+
+machine = torch.device('cpu')
+
+with open('intents.json', 'r') as f:
+    intents = json.load(f)
+
+FILE = "data.pth"
+data = torch.load(FILE)
+
+wahrscheinlichkeit = 0.8
+inputSize = data["inputSize"]
+hiddenSize = data["hiddenSize"]
+outputSize = data["outputSize"]
+allWords = data['allWords']
+tags = data['tags']
+model_state = data["model_state"]
+
+model = NeuralNet(inputSize, hiddenSize, outputSize).to(machine)
+model.load_state_dict(model_state)
+model.eval()
+
+
+booleanAntrieb = True
+booleanSUV = True
+booleanKlasse = True
+booleanKarosserie = True
+booleanTüren = True
+
+
+autoScore = 0   #Punktzahl die zutreffendes Auto findet
+#10T => Antrieb, 1T => SUV/keinSUV, 100 => Klasse, 10 => Karoserie, 1 => Türen
+antriebScores = {'Benzin': 10000, 'Diesel': 20000, 'Hybrid': 30000, 'Elektrisch': 40000}
+SUVScores= {'SUV': 1000, 'kein SUV': 0000}
+klasseScores = {'Kompakt': 000, 'Mittel': 100, 'obere Mittel': 200, 'Oberklasse': 300, 'Luxusklasse': 400, 'Van': 500}
+karosserieScores = {'T-Modell': 00, 'Limousine': 10, 'Coupe': 20, 'Cabrio': 30}
+türenScores = {'2Tuerer': 0, '4Tuerer': 1}
+
+antriebe = ['Benzin', 'Diesel', 'Hybrid', 'Elektrisch']
+SUV = ['SUV', 'kein SUV']
+klassen = ['Kompakt', 'Mittel', 'obere Mittel', 'Oberklasse', 'Luxusklasse']
+karosserien = ['T-Modell', 'Limousine', 'Coupe', 'Cabrio']
+türen = ['2Tuerer', '4Tuerer']
+
+botName = "Maggus"
+print(f"{botName}: Hallo, ich bin {botName}, dein persoenlicher MB-Auswahlassistent!")
+
+
+
+def frage(antrieb, suv, klasse, karosserie, tür, name, score):
+
+    ende = False
+    autoScore = score
+
+    if antrieb:          print(f"{name}: Welchen Antrieb willst du haben?")
+    elif suv:            print(f"{name}: Möchtest du einen SUV?")
+    elif klasse:         print(f"{name}: Welche Fahrzeugklasse wünschst du dir?")    
+    elif karosserie:     print(f"{name}: Welche Karosserieform möchtest du?")
+    elif tür:          print(f"{name}: Wie viele Türen soll dein Fahrzeug haben?")
+    else:                      
+        auswertung(autoScore, name)
+        return
+
         
-            
-        satz = input("Du: ")
-        if satz == "ENDE":
-            booleanSUV = False
-            booleanAntrieb = False
-            booleanKarosserie = False
-            booleanKlasse = False
-            booleanTüren = False
-            break
+    satz = input("Du: ")
 
-
-        satz = tokenize(satz)
-        X = bagOfWords(satz, allWords)
-        X = X.reshape(1, X.shape[0])
-        X = torch.from_numpy(X)
-
-        output = model(X)
-        _, predicted = torch.max(output, dim= 1)
-        tag = tags[predicted.item()]
-
-        probs = torch.softmax(output, dim= 1)
-        prob = probs[0][predicted.item()]
-
-        if prob.item() > wahrscheinlichkeit:
-            #Autoscore nach Tags berechnen
-            if ((tag == "Benzin" or tag == "Elektrisch" or tag == "Hybrid" or tag == "Diesel") and booleanAntrieb == True):
-                booleanAntrieb = False
-                autoScore += antriebScores.get(tag)
-            elif ((tag == "Benzin" or tag == "Elektrisch" or tag == "Hybrid" or tag == "Diesel") and booleanAntrieb == False):
-                print(f"{botName}: Du hast deine Antriebsart bereits ausgewählt.")
-                continue
-
-            if ((tag == "SUV" or tag == "kein SUV") and booleanSUV == True):
-                booleanSUV = False
-                autoScore += SUVScores.get(tag)
-            elif ((tag == "SUV" or tag == "kein SUV") and booleanSUV == False):
-                print(f"{botName}: Ob SUV oder nicht hast du bereits gewählt.")
-                continue
-
-            if ((tag == "Kompakt" or tag == "Mittel" or tag == "obere Mittel" or tag == "Oberklasse" or tag == "Luxusklasse" or tag == "Van") and booleanKlasse == True):
-                booleanKlasse = False
-                autoScore += klasseScores.get(tag)
-            elif ((tag == "Kompakt" or tag == "Mittel" or tag == "obere Mittel" or tag == "Oberklasse" or tag == "Luxusklasse" or tag == "Van") and booleanKlasse == False):
-                print(f"{botName}: Du hast deine Klasse bereits ausgewählt.")
-                continue
-
-            if ((tag == "T-Modell" or tag == "Limousine" or tag == "Coupe" or tag == "Cabrio") and booleanKarosserie == True):
-                booleanKarosserie = False
-                autoScore += karosserieScores.get(tag)
-            elif ((tag == "T-Modell" or tag == "Limousine" or tag == "Coupe" or tag == "Cabrio") and booleanKarosserie == False):
-                print(f"{botName}: Du hast deine Karosserieform bereits ausgewählt.")
-                continue
-
-            if ((tag == "2Tuerer" or tag == "4Tuerer") and booleanTüren == True):
-                booleanTüren = False
-                autoScore += türenScores.get(tag)
-            elif ((tag == "2Tuerer" or tag == "4Tuerer") and booleanTüren == False):
-                print(f"{botName}: Du hast deine Türanzahl bereits ausgewählt.")
-                continue
-
-            print(tag)
-            for intent in intents["intents"]:
-                if tag == intent["tag"]:
-                    print(f"{botName}: {random.choice(intent['responses'])}")
-        else:
-            print(f"{botName}: Ich verstehe dich leider nicht :-(")
-            print(f"{botName}: Kannst du deine Aussage vielleicht umformulieren?")
-
-    while booleanSUV:
-        print(f"{botName}: Möchtest du einen SUV?")
+    if satz == "ENDE" :
+        auswertung(autoScore, name)
+        return
         
 
-        satz = input("Du: ")
-        if satz == "ENDE":
-            booleanSUV = False
-            booleanAntrieb = False
-            booleanKarosserie = False
-            booleanKlasse = False
-            booleanTüren = False
-            break
 
+    satz = tokenize(satz)
+    X = bagOfWords(satz, allWords)
+    X = X.reshape(1, X.shape[0])
+    X = torch.from_numpy(X)
 
-        satz = tokenize(satz)
-        X = bagOfWords(satz, allWords)
-        X = X.reshape(1, X.shape[0])
-        X = torch.from_numpy(X)
+    output = model(X)
+    _, predicted = torch.max(output, dim= 1)
+    tag = tags[predicted.item()]
 
-        output = model(X)
-        _, predicted = torch.max(output, dim= 1)
-        tag = tags[predicted.item()]
+    probs = torch.softmax(output, dim= 1)
+    prob = probs[0][predicted.item()]
 
-        probs = torch.softmax(output, dim= 1)
-        prob = probs[0][predicted.item()]
-
-        if prob.item() > wahrscheinlichkeit:
-            #Autoscore nach Tags berechnen
-            if ((tag == "Benzin" or tag == "Elektrisch" or tag == "Hybrid" or tag == "Diesel") and booleanAntrieb == True):
-                booleanAntrieb = False
-                autoScore += antriebScores.get(tag)
-            elif ((tag == "Benzin" or tag == "Elektrisch" or tag == "Hybrid" or tag == "Diesel") and booleanAntrieb == False):
-                print(f"{botName}: Du hast deine Antriebsart bereits ausgewählt.")
-                continue
-
-            if ((tag == "SUV" or tag == "kein SUV") and booleanSUV == True):
-                booleanSUV = False
-                autoScore += SUVScores.get(tag)
-            elif ((tag == "SUV" or tag == "kein SUV") and booleanSUV == False):
-                print(f"{botName}: Ob SUV oder nicht hast du bereits gewählt.")
-                continue
-
-            if ((tag == "Kompakt" or tag == "Mittel" or tag == "obere Mittel" or tag == "Oberklasse" or tag == "Luxusklasse" or tag == "Van") and booleanKlasse == True):
-                booleanKlasse = False
-                autoScore += klasseScores.get(tag)
-            elif ((tag == "Kompakt" or tag == "Mittel" or tag == "obere Mittel" or tag == "Oberklasse" or tag == "Luxusklasse" or tag == "Van") and booleanKlasse == False):
-                print(f"{botName}: Du hast deine Klasse bereits ausgewählt.")
-                continue
-
-            if ((tag == "T-Modell" or tag == "Limousine" or tag == "Coupe" or tag == "Cabrio") and booleanKarosserie == True):
-                booleanKarosserie = False
-                autoScore += karosserieScores.get(tag)
-            elif ((tag == "T-Modell" or tag == "Limousine" or tag == "Coupe" or tag == "Cabrio") and booleanKarosserie == False):
-                print(f"{botName}: Du hast deine Karosserieform bereits ausgewählt.")
-                continue
-
-            if ((tag == "2Tuerer" or tag == "4Tuerer") and booleanTüren == True):
-                booleanTüren = False
-                autoScore += türenScores.get(tag)
-            elif ((tag == "2Tuerer" or tag == "4Tuerer") and booleanTüren == False):
-                print(f"{botName}: Du hast deine Türanzahl bereits ausgewählt.")
-                continue
-
-            print(tag)
-            for intent in intents["intents"]:
-                if tag == intent["tag"]:
-                    print(f"{botName}: {random.choice(intent['responses'])}")
-        else:
-            print(f"{botName}: Ich verstehe dich leider nicht :-(")
-            print(f"{botName}: Kannst du deine Aussage vielleicht umformulieren?")
-
-    while booleanKlasse:
-        print(f"{botName}: Welche Fahrzeugklasse wünschst du dir?")
-        
+    if prob.item() > wahrscheinlichkeit:
+        #Autoscore nach Tags berechnen
+        if ((tag in antriebe) and antrieb):
+            antrieb = False
+            autoScore += antriebScores.get(tag)
+            #frage(antrieb, suv, klasse, karosserie, tür, name, autoScore)
+        elif ((tag in antriebe) and not antrieb):
+            print(f"{botName}: Du hast deine Antriebsart bereits ausgewählt.")
             
-        satz = input("Du: ")
-        if satz == "ENDE":
-            booleanSUV = False
-            booleanAntrieb = False
-            booleanKarosserie = False
-            booleanKlasse = False
-            booleanTüren = False
-            break
+            #frage(antrieb, suv, klasse, karosserie, tür, name, autoScore)
 
+        if ((tag in SUV) and suv):
+            suv = False
+            autoScore += SUVScores.get(tag)
+            #frage(antrieb, suv, klasse, karosserie, tür, name, autoScore)
+        elif ((tag in SUV) and not suv):
+            print(f"{botName}: Ob SUV oder nicht hast du bereits gewählt.")
+            #frage(antrieb, suv, klasse, karosserie, tür, name, autoScore)
 
-        satz = tokenize(satz)
-        X = bagOfWords(satz, allWords)
-        X = X.reshape(1, X.shape[0])
-        X = torch.from_numpy(X)
+        if ((tag in klassen) and klasse):
+            klasse = False
+            autoScore += klasseScores.get(tag)
+            #frage(antrieb, suv, klasse, karosserie, tür, name, autoScore)
+        elif ((tag in klassen) and not klasse):
+            print(f"{botName}: Du hast deine Klasse bereits ausgewählt.")
+            #frage(antrieb, suv, klasse, karosserie, tür, name, autoScore)
+        if ((tag in karosserien) and karosserie):
+            karosserie = False
+            autoScore += karosserieScores.get(tag)
+            #frage(antrieb, suv, klasse, karosserie, tür, name, autoScore)
+        elif ((tag in karosserien) and not karosserie):
+            print(f"{botName}: Du hast deine Karosserieform bereits ausgewählt.")
+            #frage(antrieb, suv, klasse, karosserie, tür, name, autoScore)
 
-        output = model(X)
-        _, predicted = torch.max(output, dim= 1)
-        tag = tags[predicted.item()]
+        if ((tag in türen) and tür):
+            tür = False
+            autoScore += türenScores.get(tag)
+            #frage(antrieb, suv, klasse, karosserie, tür, name, autoScore)
+        elif ((tag in türen) and not tür):
+            print(f"{botName}: Du hast deine Türanzahl bereits ausgewählt.")
+            #frage(antrieb, suv, klasse, karosserie, tür, name, autoScore)
 
-        probs = torch.softmax(output, dim= 1)
-        prob = probs[0][predicted.item()]
+        #print(tag)
+        for intent in intents["intents"]:
+            if tag == intent["tag"]:
+                print(f"{botName}: {random.choice(intent['responses'])}")
 
-        if prob.item() > wahrscheinlichkeit:
-            #Autoscore nach Tags berechnen
-            if ((tag == "Benzin" or tag == "Elektrisch" or tag == "Hybrid" or tag == "Diesel") and booleanAntrieb == True):
-                booleanAntrieb = False
-                autoScore += antriebScores.get(tag)
-            elif ((tag == "Benzin" or tag == "Elektrisch" or tag == "Hybrid" or tag == "Diesel") and booleanAntrieb == False):
-                print(f"{botName}: Du hast deine Antriebsart bereits ausgewählt.")
-                continue
+        frage(antrieb, suv, klasse, karosserie, tür, name, autoScore)
 
-            if ((tag == "SUV" or tag == "kein SUV") and booleanSUV == True):
-                booleanSUV = False
-                autoScore += SUVScores.get(tag)
-            elif ((tag == "SUV" or tag == "kein SUV") and booleanSUV == False):
-                print(f"{botName}: Ob SUV oder nicht hast du bereits gewählt.")
-                continue
+    elif not ende:
+        print(f"{botName}: Ich verstehe dich leider nicht :-(")
+        print(f"{botName}: Kannst du deine Aussage vielleicht umformulieren?")
+        frage(antrieb, suv, klasse, karosserie, tür, name, autoScore)
 
-            if ((tag == "Kompakt" or tag == "Mittel" or tag == "obere Mittel" or tag == "Oberklasse" or tag == "Luxusklasse" or tag == "Van") and booleanKlasse == True):
-                booleanKlasse = False
-                autoScore += klasseScores.get(tag)
-            elif ((tag == "Kompakt" or tag == "Mittel" or tag == "obere Mittel" or tag == "Oberklasse" or tag == "Luxusklasse" or tag == "Van") and booleanKlasse == False):
-                print(f"{botName}: Du hast deine Klasse bereits ausgewählt.")
-                continue
-
-            if ((tag == "T-Modell" or tag == "Limousine" or tag == "Coupe" or tag == "Cabrio") and booleanKarosserie == True):
-                booleanKarosserie = False
-                autoScore += karosserieScores.get(tag)
-            elif ((tag == "T-Modell" or tag == "Limousine" or tag == "Coupe" or tag == "Cabrio") and booleanKarosserie == False):
-                print(f"{botName}: Du hast deine Karosserieform bereits ausgewählt.")
-                continue
-
-            if ((tag == "2Tuerer" or tag == "4Tuerer") and booleanTüren == True):
-                booleanTüren = False
-                autoScore += türenScores.get(tag)
-            elif ((tag == "2Tuerer" or tag == "4Tuerer") and booleanTüren == False):
-                print(f"{botName}: Du hast deine Türanzahl bereits ausgewählt.")
-                continue
-
-            print(tag)
-            for intent in intents["intents"]:
-                if tag == intent["tag"]:
-                    print(f"{botName}: {random.choice(intent['responses'])}")
-        else:
-            print(f"{botName}: Ich verstehe dich leider nicht :-(")
-            print(f"{botName}: Kannst du deine Aussage vielleicht umformulieren?")
-
-            
-    while booleanKarosserie:
-        print(f"{botName}: Welche Karosserieform möchtest du?")
-    
-        satz = input("Du: ")
-        if satz == "ENDE":
-            booleanSUV = False
-            booleanAntrieb = False
-            booleanKarosserie = False
-            booleanKlasse = False
-            booleanTüren = False
-            break
-
-
-        satz = tokenize(satz)
-        X = bagOfWords(satz, allWords)
-        X = X.reshape(1, X.shape[0])
-        X = torch.from_numpy(X)
-
-        output = model(X)
-        _, predicted = torch.max(output, dim= 1)
-        tag = tags[predicted.item()]
-
-        probs = torch.softmax(output, dim= 1)
-        prob = probs[0][predicted.item()]
-
-        if prob.item() > wahrscheinlichkeit:
-            #Autoscore nach Tags berechnen
-            if ((tag == "Benzin" or tag == "Elektrisch" or tag == "Hybrid" or tag == "Diesel") and booleanAntrieb == True):
-                booleanAntrieb = False
-                autoScore += antriebScores.get(tag)
-            elif ((tag == "Benzin" or tag == "Elektrisch" or tag == "Hybrid" or tag == "Diesel") and booleanAntrieb == False):
-                print(f"{botName}: Du hast deine Antriebsart bereits ausgewählt.")
-                continue
-
-            if ((tag == "SUV" or tag == "kein SUV") and booleanSUV == True):
-                booleanSUV = False
-                autoScore += SUVScores.get(tag)
-            elif ((tag == "SUV" or tag == "kein SUV") and booleanSUV == False):
-                print(f"{botName}: Ob SUV oder nicht hast du bereits gewählt.")
-                continue
-
-            if ((tag == "Kompakt" or tag == "Mittel" or tag == "obere Mittel" or tag == "Oberklasse" or tag == "Luxusklasse" or tag == "Van") and booleanKlasse == True):
-                booleanKlasse = False
-                autoScore += klasseScores.get(tag)
-            elif ((tag == "Kompakt" or tag == "Mittel" or tag == "obere Mittel" or tag == "Oberklasse" or tag == "Luxusklasse" or tag == "Van") and booleanKlasse == False):
-                print(f"{botName}: Du hast deine Klasse bereits ausgewählt.")
-                continue
-
-            if ((tag == "T-Modell" or tag == "Limousine" or tag == "Coupe" or tag == "Cabrio") and booleanKarosserie == True):
-                booleanKarosserie = False
-                autoScore += karosserieScores.get(tag)
-            elif ((tag == "T-Modell" or tag == "Limousine" or tag == "Coupe" or tag == "Cabrio") and booleanKarosserie == False):
-                print(f"{botName}: Du hast deine Karosserieform bereits ausgewählt.")
-                continue
-
-            if ((tag == "2Tuerer" or tag == "4Tuerer") and booleanTüren == True):
-                booleanTüren = False
-                autoScore += türenScores.get(tag)
-            elif ((tag == "2Tuerer" or tag == "4Tuerer") and booleanTüren == False):
-                print(f"{botName}: Du hast deine Türanzahl bereits ausgewählt.")
-                continue
-
-            print(tag)
-            for intent in intents["intents"]:
-                if tag == intent["tag"]:
-                    print(f"{botName}: {random.choice(intent['responses'])}")
-        else:
-            print(f"{botName}: Ich verstehe dich leider nicht :-(")
-            print(f"{botName}: Kannst du deine Aussage vielleicht umformulieren?")
-
-
-    while booleanTüren:
-        print(f"{botName}: Wie viele Türen soll dein Fahrzeug haben?")
-        
-            
-        satz = input("Du: ")
-        if satz == "ENDE":
-            booleanSUV = False
-            booleanAntrieb = False
-            booleanKarosserie = False
-            booleanKlasse = False
-            booleanTüren = False
-            break
-
-
-        satz = tokenize(satz)
-        X = bagOfWords(satz, allWords)
-        X = X.reshape(1, X.shape[0])
-        X = torch.from_numpy(X)
-
-        output = model(X)
-        _, predicted = torch.max(output, dim= 1)
-        tag = tags[predicted.item()]
-
-        probs = torch.softmax(output, dim= 1)
-        prob = probs[0][predicted.item()]
-
-        if prob.item() > wahrscheinlichkeit:
-            #Autoscore nach Tags berechnen
-            if ((tag == "Benzin" or tag == "Elektrisch" or tag == "Hybrid" or tag == "Diesel") and booleanAntrieb == True):
-                booleanAntrieb = False
-                autoScore += antriebScores.get(tag)
-            elif ((tag == "Benzin" or tag == "Elektrisch" or tag == "Hybrid" or tag == "Diesel") and booleanAntrieb == False):
-                print(f"{botName}: Du hast deine Antriebsart bereits ausgewählt.")
-                continue
-
-            if ((tag == "SUV" or tag == "kein SUV") and booleanSUV == True):
-                booleanSUV = False
-                autoScore += SUVScores.get(tag)
-            elif ((tag == "SUV" or tag == "kein SUV") and booleanSUV == False):
-                print(f"{botName}: Ob SUV oder nicht hast du bereits gewählt.")
-                continue
-
-            if ((tag == "Kompakt" or tag == "Mittel" or tag == "obere Mittel" or tag == "Oberklasse" or tag == "Luxusklasse" or tag == "Van") and booleanKlasse == True):
-                booleanKlasse = False
-                autoScore += klasseScores.get(tag)
-            elif ((tag == "Kompakt" or tag == "Mittel" or tag == "obere Mittel" or tag == "Oberklasse" or tag == "Luxusklasse" or tag == "Van") and booleanKlasse == False):
-                print(f"{botName}: Du hast deine Klasse bereits ausgewählt.")
-                continue
-
-            if ((tag == "T-Modell" or tag == "Limousine" or tag == "Coupe" or tag == "Cabrio") and booleanKarosserie == True):
-                booleanKarosserie = False
-                autoScore += karosserieScores.get(tag)
-            elif ((tag == "T-Modell" or tag == "Limousine" or tag == "Coupe" or tag == "Cabrio") and booleanKarosserie == False):
-                print(f"{botName}: Du hast deine Karosserieform bereits ausgewählt.")
-                continue
-
-            if ((tag == "2Tuerer" or tag == "4Tuerer") and booleanTüren == True):
-                booleanTüren = False
-                autoScore += türenScores.get(tag)
-            elif ((tag == "2Tuerer" or tag == "4Tuerer") and booleanTüren == False):
-                print(f"{botName}: Du hast deine Türanzahl bereits ausgewählt.")
-                continue
-
-            print(tag)
-            for intent in intents["intents"]:
-                if tag == intent["tag"]:
-                    print(f"{botName}: {random.choice(intent['responses'])}")
-        else:
-            print(f"{botName}: Ich verstehe dich leider nicht :-(")
-            print(f"{botName}: Kannst du deine Aussage vielleicht umformulieren?")
-
+def auswertung(score, name):
 
     autos = {10111: 'A-Klasse Limousine', 10001: 'A-Klasse/B-Klasse', 11001: 'GLA/GLB', 20111: 'A-Klasse Limousine d', 20001: 'A-Klasse/B-Klasse d', 21001: 'GLA/GLB d',
             30011: 'A-Klasse Limousine hybrid', 30001: 'A-Klasse/B-Klasse hybrid', 31001: 'GLA hybrid', 41001: 'EQA/EQB', 10101: 'C-Klasse T-Modell', 10111: 'C-Klasse Limousine', 10120: 'CLE',
@@ -407,12 +153,13 @@ def main():
             11221: 'GLE Coupe', 20201: 'E-Klasse T-Modell d', 20211: 'E-Klasse Limousine d', 20220: 'CLE d', 21201: 'GLE d', 21221: 'GLE Coupe d', 30201: 'E-Klasse T-Modell hybrid', 
             30211: 'E-Klasse Limousine hybrid', 30220: 'CLE hybrid', 31201: 'GLE hybrid', 31221: 'GLE Coupe hybrid',40211: 'EQE', 41201: 'EQE SUV', 10311: 'S-Klasse', 11311: 'GLS', 10320: 'AMG GT Coupe',
             10321: 'AMG GT 4-Türer Coupe', 10330: 'AMG SL', 20311: 'S-Klasse d', 21311: 'GLS d', 30311: 'S-Klasse hybrid', 31311: 'GLS hybrid', 40311: 'EQS', 41311: 'EQS SUV', 
-            10411: 'Maybach S-Klasse', 11411: 'Maybach GLS', 30411: 'Maybach S-Klasse hybrid', 31411: 'Maybach GLS hybrid', 41411: 'Maybach EQS SUV'}
+            10411: 'Maybach S-Klasse', 11411: 'Maybach GLS', 30411: 'Maybach S-Klasse hybrid', 31411: 'Maybach GLS hybrid', 41401: 'Maybach EQS SUV'}
 
-    if (booleanAntrieb == False and booleanKarosserie == False and booleanKlasse == False and booleanSUV == False and booleanTüren == False and autoScore in autos.keys()):
-        print(f"{botName}: Dein zu dir passendes Auto: " + autos[autoScore])
+    
+    if score in autos.keys():
+        print(f"{name}: Dein zu dir passendes Auto: " + autos[score])
     else:
-        print(f"{botName}: Mercedes-Benz bietet derzeit leider kein für dich passendes Fahrzeug an")
+        print(f"{name}: Mercedes-Benz bietet derzeit leider kein für dich passendes Fahrzeug an")
 
 
-main()
+frage(booleanAntrieb, booleanSUV, booleanKlasse, booleanKarosserie, booleanTüren, botName, autoScore)
