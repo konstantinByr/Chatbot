@@ -407,7 +407,7 @@ def main():
             11221: 'GLE Coupe', 20201: 'E-Klasse T-Modell d', 20211: 'E-Klasse Limousine d', 20220: 'CLE d', 21201: 'GLE d', 21221: 'GLE Coupe d', 30201: 'E-Klasse T-Modell hybrid', 
             30211: 'E-Klasse Limousine hybrid', 30220: 'CLE hybrid', 31201: 'GLE hybrid', 31221: 'GLE Coupe hybrid',40211: 'EQE', 41201: 'EQE SUV', 10311: 'S-Klasse', 11311: 'GLS', 10320: 'AMG GT Coupe',
             10321: 'AMG GT 4-Türer Coupe', 10330: 'AMG SL', 20311: 'S-Klasse d', 21311: 'GLS d', 30311: 'S-Klasse hybrid', 31311: 'GLS hybrid', 40311: 'EQS', 41311: 'EQS SUV', 
-            10411: 'Maybach S-Klasse', 11411: 'Maybach GLS', 30411: 'Maybach S-Klasse', 31411: 'Maybach GLS', 41411: 'Maybach EQS SUV'}
+            10411: 'Maybach S-Klasse', 11411: 'Maybach GLS', 30411: 'Maybach S-Klasse hybrid', 31411: 'Maybach GLS hybrid', 41411: 'Maybach EQS SUV'}
 
     if (booleanAntrieb == False and booleanKarosserie == False and booleanKlasse == False and booleanSUV == False and booleanTüren == False and autoScore in autos.keys()):
         print(f"{botName}: Dein zu dir passendes Auto: " + autos[autoScore])
