@@ -7,6 +7,10 @@ from chatbot3 import bagOfWords, tokenize, stem
 from model import NeuralNet
 from nltk.corpus import stopwords
 
+import neptune
+
+
+
 stopWords = stopwords.words('german')
 
 with open('intents.json', 'r') as f:
@@ -47,13 +51,34 @@ XTrain = np.array(XTrain)
 YTrain = np.array(YTrain)
 
 # Hyperparameter
-num_epochs = 500 
+num_epochs = 200
 batch_size = 32
-learning_rate = 0.001
+learning_rate = 0.0001
 inputSize = len(XTrain[0])
 hiddenSize = 128
 outputSize = len(tags)
 print(inputSize, outputSize)
+
+#Initialisierung NEPTUNE
+run = neptune.init_run(
+    project="konstantin.bayer/chatbot",
+    api_token="eyJhcGlfYWRkcmVzcyI6Imh0dHBzOi8vYXBwLm5lcHR1bmUuYWkiLCJhcGlfdXJsIjoiaHR0cHM6Ly9hcHAubmVwdHVuZS5haSIsImFwaV9rZXkiOiI0ZDY0ZTZkMS0zZTNiLTQ4NjgtYTVlMS1jZDExM2IyYTNkZjUifQ==",
+)
+
+loss = []
+optimizer = []
+learning_rate = []
+
+params = {
+    "max_epochs": num_epochs,
+    "optimizer": "Adadelta",
+    "batchsize": batch_size,
+    "learningrate": learning_rate,
+    "hidden Size": hiddenSize,
+    "model_architecture": "Feedforward Neural Network",
+    "validation_data": "None"  # Update this if you have validation data
+}
+run["parameters"] = params
 
 class ChatDataset(Dataset):
 
@@ -77,13 +102,12 @@ train_loader = DataLoader(dataset=dataset,
 device = torch.device('cpu')
 
 model = NeuralNet(inputSize, hiddenSize, outputSize).to(device)
-
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adadelta(model.parameters())
 
 NFILE = 'data3.pth'
 
-prüfLoss = 99
+prüfLoss = -1   #Deaktivierung Abspeicherung während laufendem Betrieb
 
 for epoch in range(num_epochs):
     for (words, labels) in train_loader:
@@ -94,7 +118,8 @@ for epoch in range(num_epochs):
         outputs = model(words)
         loss = criterion(outputs, labels)
 
-        
+        run["train/loss"].append(loss*10)
+        run["train/epoch"].append(epoch)
 
         if loss <= prüfLoss:
             data = {
@@ -122,6 +147,17 @@ print(f'final loss: {loss.item():.4f}')
 
 
 FILE = "data.pth"
+data = {
+            "model_state": model.state_dict(),
+            "inputSize": inputSize,
+            "hiddenSize": hiddenSize,
+            "outputSize": outputSize,
+            "allWords": allWords,
+            "tags": tags
+        }
 torch.save(data, FILE)
 
 print(f'Training abgeschlossen, Datei gespeichert unter {FILE}')
+
+
+run.stop()

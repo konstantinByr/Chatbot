@@ -75,7 +75,7 @@
         {
             "tag": "Kompakt",
             "patterns": [
-                "A-Klasse", "Klein", "Stadt", "Stadttauglich", "Kompakt", "Kompaktwagen", "sehr kurzer Radstand"
+                "A-Klasse", "Klein", "Stadt", "Stadttauglich", "Kompakt", "Kompaktwagen", "sehr kurzer Radstand", "Kompaktklasse", "B-Klasse"
             ],
             "responses": [
                 "Ein Kompaktfahrzeug, habe verstanden!", "Der 'Kompaktwagen' ist eingeloggt!", "Kompakt, ist notiert!"
@@ -169,7 +169,7 @@
                 "4 Türen", "4 Tuerer", "vier Tueren", "Viertuerer", "Vier", "4", "Vier Türen", "Viertürer"
             ],
             "responses": [
-                "Viertuerer, habe ich mir aufgescchrieben!", "Viertuerer, ist notiert!", "Ich habe 'Viertuerer eingeloggt!", "Ich habe 'Viertürer' verstanden!"
+                "Viertuerer, habe ich mir aufgescchrieben!", "Viertuerer, ist notiert!", "Ich habe 'Viertuerer eingeloggt!", "Ich habe 'Viertuerer' verstanden!"
             ]
         }
     ]
