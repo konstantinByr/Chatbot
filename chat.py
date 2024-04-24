@@ -145,15 +145,36 @@ def frage(antrieb, suv, klasse, karosserie, tür, name, score):
 
 def auswertung(score, name):
 
-    autos = {10111: 'A-Klasse Limousine', 10001: 'A-Klasse/B-Klasse', 11001: 'GLA/GLB', 20111: 'A-Klasse Limousine d', 20001: 'A-Klasse/B-Klasse d', 21001: 'GLA/GLB d',
-            30011: 'A-Klasse Limousine hybrid', 30001: 'A-Klasse/B-Klasse hybrid', 31001: 'GLA hybrid', 41001: 'EQA/EQB', 10101: 'C-Klasse T-Modell', 
-            10111: 'C-Klasse Limousine', 10120: 'CLE', 11101: 'GLC', 11121: 'GLC Coupe', 20101: 'C-Klasse T-Modell d', 20111: 'C-Klasse Limousine d', 20120: 'CLE d', 
-            21101: 'GLC d', 21121: 'GLC Coupe d', 30101: 'C-Klasse T-Modell hybrid', 30111: 'C-Klasse Limousine hybrid', 30120: 'CLE hybrid', 31101: 'GLC hybrid', 
-            31121: 'GLC Coupe hybrid', 10201: 'E-Klasse T-Modell', 10211: 'E-Klasse Limousine', 10220: 'CLE', 11201: 'GLE', 11221: 'GLE Coupe', 20201: 'E-Klasse T-Modell d', 
-            20211: 'E-Klasse Limousine d', 20220: 'CLE d', 21201: 'GLE d', 21221: 'GLE Coupe d', 30201: 'E-Klasse T-Modell hybrid', 30211: 'E-Klasse Limousine hybrid', 
-            30220: 'CLE hybrid', 31201: 'GLE hybrid', 31221: 'GLE Coupe hybrid',40211: 'EQE', 41201: 'EQE SUV', 10311: 'S-Klasse', 11301: 'GLS', 10320: 'AMG GT Coupe',
-            10321: 'AMG GT 4-Türer Coupe', 10330: 'AMG SL', 20311: 'S-Klasse d', 21301: 'GLS d', 30311: 'S-Klasse hybrid', 31301: 'GLS hybrid', 40301: 'EQS', 41301: 'EQS SUV', 
-            10411: 'Maybach S-Klasse', 11401: 'Maybach GLS', 30411: 'Maybach S-Klasse hybrid', 31401: 'Maybach GLS hybrid', 41401: 'Maybach EQS SUV'}
+    autos = {
+        #A-Klasse/B-Klasse:
+        10011: 'A-Klasse Limousine', 10001: 'A-Klasse/B-Klasse', 
+        20011: 'A-Klasse Limousine d', 20001: 'A-Klasse/B-Klasse d', 
+        30011: 'A-Klasse Limousine hybrid', 30001: 'A-Klasse/B-Klasse hybrid',
+        #GLA/GLB:
+        11001: 'GLA/GLB',  21001: 'GLA/GLB d',
+        31001: 'GLA hybrid', 41001: 'EQA/EQB', 
+        #C-Klasse
+        10101: 'C-Klasse T-Modell', 20101: 'C-Klasse T-Modell d', 30101: 'C-Klasse T-Modell hybrid',
+        10111: 'C-Klasse Limousine', 20111: 'C-Klasse Limousine d', 30111: 'C-Klasse Limousine hybrid',
+        #CLE
+        10120: 'CLE', 20120: 'CLE d', 30120: 'CLE hybrid', 10220: 'CLE', 20220: 'CLE d', 30220: 'CLE hybrid',
+        10130: 'CLE Carbiolet', 20130: 'CLE d Cabriolet', 30130: 'CLE hybrid Carbiolet', 10230: 'CLE Cabriolet', 20230: 'CLE d Cabriolet', 30230: 'CLE hybrid Cabriolet',
+        #GLC
+        11101: 'GLC', 21101: 'GLC d', 31101: 'GLC hybrid',
+        11121: 'GLC Coupe', 21121: 'GLC Coupe d', 31121: 'GLC Coupe hybrid',
+        #E-Klasse 
+        10201: 'E-Klasse T-Modell',  20201: 'E-Klasse T-Modell d', 30201: 'E-Klasse T-Modell hybrid',
+        10211: 'E-Klasse Limousine',  20211: 'E-Klasse Limousine d', 30211: 'E-Klasse Limousine hybrid', 40211: 'EQE',
+        #GLE
+        11201: 'GLE', 21201: 'GLE d', 31201: 'GLE hybrid', 41201: 'EQE SUV',
+        11221: 'GLE Coupe', 21221: 'GLE Coupe d', 31221: 'GLE Coupe hybrid',
+        #S-Klasse    
+        10311: 'S-Klasse', 20311: 'S-Klasse d', 30311: 'S-Klasse hybrid', 40301: 'EQS', 10411: 'Maybach S-Klasse', 11401: 'Maybach GLS', 30411: 'Maybach S-Klasse hybrid',
+        #GLS
+        11301: 'GLS', 21301: 'GLS d', 31301: 'GLS hybrid', 41301: 'EQS SUV',
+        #GT/SL
+        10320: 'AMG GT Coupe', 10321: 'AMG GT 4-Türer Coupe', 10330: 'AMG SL', 
+        }
 
     
     if score in autos.keys():

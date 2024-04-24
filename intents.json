@@ -39,7 +39,8 @@
         {
             "tag": "Elektrisch",
             "patterns": [
-                "Elektrisch", "Elektro", "Stromer", "Klimafreundlich", "E-Motor", "E-Power", "E-Maschine", "Elektroauto"
+                "Elektrisch", "Elektro", "Stromer", "Klimafreundlich", "E-Motor", "E-Power", "E-Maschine", "Elektroauto", "Elektrizität", "Ökologisch", "Ökologie", "Erneuerbar",
+                "Öko"
             ],
             "responses": [
                 "Ein Elektroauto also...", "Ich habe 'E-Auto' verstanden!", "Das Elektroauto ist eine gute Wahl!", "E-Auto, ist notiert!"
@@ -57,7 +58,7 @@
         {
             "tag": "SUV",
             "patterns": [
-                "SUV", "Gelände", "geländegänging", "Berge", "hoch sitzen", "bequem einsteigen", "Ja", "SportsUtilityVehicle"
+                "SUV", "Gelände", "geländegänging", "Berge", "hoch sitzen", "bequem einsteigen", "Ja", "SportsUtilityVehicle", "SUV SUV", "Yes", "Of course", "Jaa"
             ],
             "responses": [
                 "Ich habe mir 'SUV' aufgeschrieben.", "SUV also. Ich bin auch ein Fan vom hohen Sitzen.", "Welcher SUV darf es denn sein?"
@@ -66,7 +67,7 @@
         {
             "tag": "kein SUV",
             "patterns": [
-                "kein SUV", "befestigte Straßen", "Nein"
+                "kein SUV", "befestigte Straßen", "Nein", "No", "Nope", "Nö"
             ],
             "responses": [
                 "Ich habe 'kein SUV' verstanden.", "Ich freue mich, dass du dich fuer die umweltfreundlichere Option entschieden hast!", "'kein SUV' ist eingeloggt!"
@@ -93,7 +94,7 @@
         {
             "tag": "obere Mittel",
             "patterns": [
-                "E-Klasse", "obere Mittelklasse", "obere Mittel", "GLE"
+                "E-Klasse", "obere Mittelklasse", "obere Mittel", "GLE", "bussines"
             ],
             "responses": [
                 "Obere Mittelklasse, habe verstanden!", "Die 'obere Mittelklasse' ist eingeloggt!", "Ich habe mir 'obere Mittelklasse' aufgeschrieben!", 
@@ -112,7 +113,7 @@
         {
             "tag": "Luxusklasse",
             "patterns": [
-                "Luxusklasse", "Maybach", "das Beste"
+                "Luxusklasse", "Maybach", "das Beste", "1. Klasse"
             ],
             "responses": [
                 "Luxusklasse, ist notiert", "Ich habe mir 'Luxusklasse' aufgeschrieben!", "Die 'Luxusklasse' ist eingeloggt!"
@@ -121,7 +122,7 @@
         {
             "tag": "T-Modell",
             "patterns": [
-                "Kombi", "Avant", "Grosser Kofferaum", "praktisch", "T-Modell"
+                "Kombi", "Avant", "Grosser Kofferaum", "praktisch", "T-Modell", "T Modell"
             ],
             "responses": [
                 "T-Modell, ist notiert!", "Ein T-Model also...", "T-Modell ist eingeloggt!", "Ich habe mir 'T-Modell' aufgeschrieben!"
@@ -148,7 +149,7 @@
         {
             "tag": "Cabrio",
             "patterns": [
-                "Roadster", "Cabrio", "offenes Dach", "kein Dach"
+                "Roadster", "Cabrio", "offenes Dach", "kein Dach", "Caprio"
             ],
             "responses": [
                 "Ich habe 'Cabrio' verstanden!", "Cabrio, ist notiert!", "Ich habe 'Cabrio' eingeloggt!"
