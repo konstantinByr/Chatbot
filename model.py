@@ -6,28 +6,16 @@ class NeuralNet(nn.Module):
         self.layer1 = nn.Linear(inputSize, hiddenSize)
         self.layer2 = nn.Linear(hiddenSize, hiddenSize)
         self.layer3 = nn.Linear(hiddenSize, hiddenSize)
-        #self.layer4 = nn.Linear(hiddenSize, hiddenSize)
-        #self.layer5 = nn.Linear(hiddenSize, hiddenSize)
-        #self.layer6 = nn.Linear(hiddenSize, hiddenSize)
-        #self.layer7 = nn.Linear(hiddenSize, hiddenSize)
-        #self.layer8 = nn.Linear(hiddenSize, hiddenSize)
-        #self.layer9 = nn.Linear(hiddenSize, hiddenSize)
-        #self.layerX = nn.Linear(hiddenSize, numClasses)
         self.relu = nn.ReLU()
+        # Initialisiere die activations-Liste für jede Schicht
+        self.activations = [[] for _ in range(3)]  # Hier 3 für 3 Schichten
 
     def forward(self, x):
         out = self.layer1(x)
+        self.activations[0].append(out)  # Speichere die Aktivierung der ersten Schicht
         out = self.layer2(out)
+        self.activations[1].append(out)  # Speichere die Aktivierung der zweiten Schicht
         out = self.relu(out)
         out = self.layer3(out)
-        #out = self.layer4(out)
-        #out = self.layer5(out)
-        #out = self.layer6(out)
-        #out = self.layer7(out)
-        #out = self.layer8(out)
-        #out = self.layer9(out)
-        #out = self.relu(out)
-        #out = self.layerX(out)
-        #out = self.layer5(out)
-        #out = self.relu(out)
+        self.activations[2].append(out)  # Speichere die Aktivierung der dritten Schicht
         return out
