@@ -7,7 +7,7 @@ from chatbot3 import bagOfWords, tokenize
 import neptune
 
 
-machine = torch.device('cpu')   #NeuralNet läuft über CPU
+machine = torch.device('cpu')   #NeuralNet läuft über CPUHybrid
 
 with open('intents.json', 'r') as f:
     intents = json.load(f)
@@ -151,9 +151,9 @@ def auswertung(score, name):
             21101: 'GLC d', 21121: 'GLC Coupe d', 30101: 'C-Klasse T-Modell hybrid', 30111: 'C-Klasse Limousine hybrid', 30120: 'CLE hybrid', 31101: 'GLC hybrid', 
             31121: 'GLC Coupe hybrid', 10201: 'E-Klasse T-Modell', 10211: 'E-Klasse Limousine', 10220: 'CLE', 11201: 'GLE', 11221: 'GLE Coupe', 20201: 'E-Klasse T-Modell d', 
             20211: 'E-Klasse Limousine d', 20220: 'CLE d', 21201: 'GLE d', 21221: 'GLE Coupe d', 30201: 'E-Klasse T-Modell hybrid', 30211: 'E-Klasse Limousine hybrid', 
-            30220: 'CLE hybrid', 31201: 'GLE hybrid', 31221: 'GLE Coupe hybrid',40211: 'EQE', 41201: 'EQE SUV', 10311: 'S-Klasse', 11311: 'GLS', 10320: 'AMG GT Coupe',
-            10321: 'AMG GT 4-Türer Coupe', 10330: 'AMG SL', 20311: 'S-Klasse d', 21311: 'GLS d', 30311: 'S-Klasse hybrid', 31311: 'GLS hybrid', 40311: 'EQS', 41311: 'EQS SUV', 
-            10411: 'Maybach S-Klasse', 11411: 'Maybach GLS', 30411: 'Maybach S-Klasse hybrid', 31411: 'Maybach GLS hybrid', 41401: 'Maybach EQS SUV'}
+            30220: 'CLE hybrid', 31201: 'GLE hybrid', 31221: 'GLE Coupe hybrid',40211: 'EQE', 41201: 'EQE SUV', 10311: 'S-Klasse', 11301: 'GLS', 10320: 'AMG GT Coupe',
+            10321: 'AMG GT 4-Türer Coupe', 10330: 'AMG SL', 20311: 'S-Klasse d', 21301: 'GLS d', 30311: 'S-Klasse hybrid', 31301: 'GLS hybrid', 40301: 'EQS', 41301: 'EQS SUV', 
+            10411: 'Maybach S-Klasse', 11401: 'Maybach GLS', 30411: 'Maybach S-Klasse hybrid', 31401: 'Maybach GLS hybrid', 41401: 'Maybach EQS SUV'}
 
     
     if score in autos.keys():
