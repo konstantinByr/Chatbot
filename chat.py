@@ -4,10 +4,7 @@ import torch
 from model import NeuralNet
 from chatbot3 import bagOfWords, tokenize
 
-import neptune
-
-
-machine = torch.device('cpu')   #NeuralNet läuft über CPUHybrid
+machine = torch.device('cpu')   #NeuralNet läuft über CPU
 
 with open('intents.json', 'r') as f:
     intents = json.load(f)

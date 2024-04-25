@@ -60,10 +60,12 @@ outputSize = len(tags)
 print(inputSize, outputSize)
 
 #Initialisierung NEPTUNE
+'''
 run = neptune.init_run(
     project="konstantin.bayer/chatbot",
-    api_token="eyJhcGlfYWRkcmVzcyI6Imh0dHBzOi8vYXBwLm5lcHR1bmUuYWkiLCJhcGlfdXJsIjoiaHR0cHM6Ly9hcHAubmVwdHVuZS5haSIsImFwaV9rZXkiOiI0ZDY0ZTZkMS0zZTNiLTQ4NjgtYTVlMS1jZDExM2IyYTNkZjUifQ==",
+    api_token="",
 )
+'''
 
 loss = []
 optimizer = []
@@ -78,7 +80,7 @@ params = {
     "model_architecture": "Feedforward Neural Network",
     "validation_data": "None"  # Update this if you have validation data
 }
-run["parameters"] = params
+#run["parameters"] = params
 
 class ChatDataset(Dataset):
 
@@ -118,8 +120,8 @@ for epoch in range(num_epochs):
         outputs = model(words)
         loss = criterion(outputs, labels)
 
-        run["train/loss"].append(loss*10)
-        run["train/epoch"].append(epoch)
+        #run["train/loss"].append(loss*10)
+        #run["train/epoch"].append(epoch)
 
         if loss <= prüfLoss:
             data = {
@@ -160,4 +162,4 @@ torch.save(data, FILE)
 print(f'Training abgeschlossen, Datei gespeichert unter {FILE}')
 
 
-run.stop()
+#run.stop()
